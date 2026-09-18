@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цифрові платформи | Вишкіл Лідерів</title>
+    <script>
+        // Застосовуємо збережену тему одразу, щоб уникнути "блимання" при завантаженні
+        (function () {
+            var saved = localStorage.getItem('vishkil-theme');
+            if (saved === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap');
+
+        :root {
+            --bg-color: #050a0f;
+            --text-primary: #ffffff;
+            --text-muted: #9ca3af;
+            --text-subtle: #d1d5db;
+            --text-quote: #e5e7eb;
+            --text-footer: #6b7280;
+            --grid-line: rgba(13, 25, 38, 0.8);
+            --bg-glow: rgba(0, 163, 255, 0.05);
+            --card-bg: rgba(16, 28, 41, 0.6);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --card-hover-shadow: rgba(0, 163, 255, 0.3);
+            --card-shine: rgba(255, 255, 255, 0.05);
+            --accent: #00a3ff;
+            --border-section: #374151;
+            --border-footer: #1f2937;
+            --quote-bg-1: rgba(0, 163, 255, 0.1);
+            --quote-bg-2: rgba(16, 28, 41, 0.8);
+            --logo-tile-bg: rgba(255, 255, 255, 0.95);
+            --logo-tile-border: rgba(255, 255, 255, 0.1);
+            --grad-1: #00d2ff;
+            --grad-2: #3a7bd5;
+            --toggle-bg: rgba(16, 28, 41, 0.7);
+            --toggle-border: rgba(0, 163, 255, 0.4);
+        }
+
+        html[data-theme="light"] {
+            --bg-color: #eef3f8;
+            --text-primary: #0d1b2a;
+            --text-muted: #5b6b7c;
+            --text-subtle: #3c4a58;
+            --text-quote: #223140;
+            --text-footer: #7c8896;
+            --grid-line: rgba(0, 163, 255, 0.10);
+            --bg-glow: rgba(0, 114, 184, 0.06);
+            --card-bg: rgba(255, 255, 255, 0.72);
+            --card-border: rgba(0, 90, 158, 0.12);
+            --card-hover-shadow: rgba(0, 114, 184, 0.25);
+            --card-shine: rgba(0, 90, 158, 0.06);
+            --accent: #0072b8;
+            --border-section: #cbd5e1;
+            --border-footer: #dbe4ee;
+            --quote-bg-1: rgba(0, 114, 184, 0.08);
+            --quote-bg-2: rgba(255, 255, 255, 0.85);
+            --logo-tile-bg: rgba(255, 255, 255, 1);
+            --logo-tile-border: rgba(0, 40, 80, 0.1);
+            --grad-1: #0072b8;
+            --grad-2: #003f7f;
+            --toggle-bg: rgba(255, 255, 255, 0.85);
+            --toggle-border: rgba(0, 114, 184, 0.35);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-attachment: fixed;
+            position: relative;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vh;
+            background: radial-gradient(circle, var(--bg-glow) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            top: 1.25rem;
+            right: 1.25rem;
+            z-index: 50;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--toggle-bg);
+            border: 1px solid var(--toggle-border);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--accent);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 0 15px var(--card-hover-shadow);
+        }
+
+        .theme-toggle svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--accent);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .theme-toggle .icon-sun { display: none; }
+        html[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+        html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+        .theme-toggle .icon-moon { display: block; }
+
+        /* Real-logo tiles */
+        .logo-tile {
+            width: 56px;
+            height: 56px;
+            min-width: 56px;
+            border-radius: 14px;
+            background: var(--logo-tile-bg);
+            border: 1px solid var(--logo-tile-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-tile.tile-lg {
+            width: 72px;
+            height: 72px;
+            min-width: 72px;
+            padding: 12px;
+            margin: 0 auto 1rem auto;
+        }
+
+        .logo-tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .glass-card:hover .logo-tile {
+            transform: scale(1.1);
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s ease, border-color 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--card-shine), transparent);
+            transition: 0.5s;
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px -10px var(--card-hover-shadow);
+        }
+
+        .glass-card.military:hover {
+            border-color: rgba(57, 255, 20, 0.4);
+            box-shadow: 0 15px 30px -10px rgba(57, 255, 20, 0.3);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--grad-1) 0%, var(--grad-2) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text-mil {
+            background: linear-gradient(90deg, #39ff14 0%, #008000 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        html[data-theme="light"] .gradient-text-mil {
+            background: linear-gradient(90deg, #1a9c06 0%, #0a5c00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-link {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .glass-card:hover .btn-link {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 0 15px var(--card-hover-shadow);
+        }
+
+        .glass-card.military .btn-link {
+            border-color: #39ff14;
+            color: #39ff14;
+        }
+
+        html[data-theme="light"] .glass-card.military .btn-link {
+            border-color: #1a9c06;
+            color: #1a9c06;
+        }
+
+        .glass-card.military:hover .btn-link {
+            background: #39ff14;
+            color: #050a0f;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+        }
+
+        .quote-box {
+            background: linear-gradient(135deg, var(--quote-bg-1), var(--quote-bg-2));
+            border-left: 4px solid var(--accent);
+        }
+        
+        .author-text {
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--card-hover-shadow);
+        }
+
+        .text-muted { color: var(--text-muted); }
+        .text-subtle { color: var(--text-subtle); }
+        .text-quote { color: var(--text-quote); }
+        .text-footer { color: var(--text-footer); }
+        .border-section { border-color: var(--border-section); }
+        .border-footer { border-color: var(--border-footer); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col p-6 lg:p-12">
+
+    <!-- Перемикач теми -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Перемкнути тему" title="Світла / темна тема">
+        <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+
+    <!-- Header -->
+    <header class="text-center mt-8">
+        <p class="text-muted uppercase tracking-widest text-sm font-semibold mb-2">Національний університет оборони України</p>
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4 uppercase tracking-wider">
+            Інститут професійної військової освіти <br>
+            <span class="gradient-text">"Вишкіл Лідерів"</span>
+        </h1>
+        <p class="text-xl text-subtle font-light">Корисні цифрові сервіси та платформи для організації навчального процесу</p>
+        
+        <!-- Доданий блок розробника -->
+        <p class="text-sm font-bold uppercase mt-6 mb-6 author-text">Розроблено Русланом Поночовним</p>
+    </header>
+
+    <!-- Мотиваційна цитата -->
+    <div class="max-w-4xl mx-auto w-full mb-16">
+        <div class="quote-box p-8 rounded-xl glass-card text-center">
+            <p class="text-2xl italic font-light text-quote">
+                "Технології не замінять викладача. Але викладачі, які використовують технології, замінять тих, хто цього не робить."
+            </p>
+        </div>
+    </div>
+
+    <!-- Основний контент - Сітка -->
+    <main class="flex-grow max-w-7xl mx-auto w-full">
+        
+        <!-- Секція: Штучний інтелект та створення контенту -->
+        <h2 class="text-2xl font-bold mb-6 border-b border-section pb-2 uppercase tracking-wider text-muted">ШІ та створення контенту</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            
+            <!-- NotebookLM -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=notebooklm.google.com" alt="NotebookLM"></div>
+                    <h3 class="text-xl font-bold mb-2">NotebookLM</h3>
+                    <p class="text-muted text-sm mb-4">Аналіз документів, створення конспектів та персоналізований ШІ-асистент для роботи з вашими лекціями.</p>
+                </div>
+                <a href="https://notebooklm.google.com/" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+
+            <!-- Gemini -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=gemini.google.com" alt="Google Gemini Logo"></div>
+                    <h3 class="text-xl font-bold mb-2">Google Gemini</h3>
+                    <p class="text-muted text-sm mb-4">Потужна мовна модель для генерації ідей, розробки планів занять та пошуку інформації.</p>
+                </div>
+                <a href="https://gemini.google.com/" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+
+            <!-- Gamma -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=gamma.app" alt="Gamma App Logo"></div>
+                    <h3 class="text-xl font-bold mb-2">Gamma App</h3>
+                    <p class="text-muted text-sm mb-4">Створення презентацій, документів та веб-сторінок за допомогою ШІ буквально за кілька секунд.</p>
+                </div>
+                <a href="https://gamma.app/" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+
+            <!-- AI Oksana (ElevenLabs) -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=elevenlabs.io" alt="ElevenLabs Logo"></div>
+                    <h3 class="text-xl font-bold mb-2">AI Oksana</h3>
+                    <p class="text-muted text-sm mb-4">ШІ-агент для голосового спілкування. Допоможе слухачам із визначенням рівня англійської мови (Speaking Test).</p>
+                </div>
+                <a href="https://elevenlabs.io/app/talk-to?agent_id=agent_01jy157570ewcbjz342h73g453" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+            
+        </div>
+
+        <!-- Секція: Організація навчання та інструменти -->
+        <h2 class="text-2xl font-bold mb-6 border-b border-section pb-2 uppercase tracking-wider text-muted">Організація та взаємодія</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            
+            <!-- Padlet -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=padlet.com" alt="Padlet Logo"></div>
+                    <h3 class="text-xl font-bold mb-2">Padlet</h3>
+                    <p class="text-muted text-sm mb-4">Інтерактивні віртуальні дошки для спільної роботи, збору відповідей та організації мозкових штурмів.</p>
+                </div>
+                <a href="https://padlet.com/" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+
+            <!-- Google Classroom -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=classroom.google.com" alt="Google Classroom Logo"></div>
+                    <h3 class="text-xl font-bold mb-2">Google Classroom</h3>
+                    <p class="text-muted text-sm mb-4">Платформа для управління навчанням: створення курсів, видача завдань та оцінювання результатів.</p>
+                </div>
+                <a href="https://classroom.google.com/" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+
+            <!-- Office 365 -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=office.com" alt="Microsoft 365 Logo"></div>
+                    <h3 class="text-xl font-bold mb-2">Microsoft 365</h3>
+                    <p class="text-muted text-sm mb-4">Хмарний офісний пакет (Word, Excel, PowerPoint, Teams) для ефективної співпраці та управління документами.</p>
+                </div>
+                <a href="https://www.office.com/" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+
+            <!-- QRCode Monkey -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=qrcode-monkey.com" alt="QRCode Monkey Logo"></div>
+                    <h3 class="text-xl font-bold mb-2">QRCode Monkey</h3>
+                    <p class="text-muted text-sm mb-4">Генератор безкоштовних QR-кодів з можливістю додавання логотипів та налаштування дизайну.</p>
+                </div>
+                <a href="https://www.qrcode-monkey.com/" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+
+            <!-- SESAME -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=sesame.com" alt="SESAME Logo"></div>
+                    <h3 class="text-xl font-bold mb-2">SESAME</h3>
+                    <p class="text-muted text-sm mb-4">Платформа корисних голосових ШІ-супутників та помічників для повсякденних і навчальних завдань.</p>
+                </div>
+                <a href="https://app.sesame.com/" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+
+            <!-- Wayground -->
+            <div class="glass-card p-6 flex flex-col h-full">
+                <div class="flex-grow">
+                    <div class="logo-tile"><img src="https://www.google.com/s2/favicons?sz=128&domain=wayground.com" alt="Wayground Logo"></div>
+                    <h3 class="text-xl font-bold mb-2">Wayground</h3>
+                    <p class="text-muted text-sm mb-4">Гнучка платформа та сервіси для організації інтерактивної взаємодії та навчання.</p>
+                </div>
+                <a href="https://wayground.com/" target="_blank" class="btn-link mt-4">Відкрити</a>
+            </div>
+            
+        </div>
+
+        <!-- Секція: Військові навчальні платформи -->
+        <h2 class="text-2xl font-bold mb-6 border-b border-section pb-2 uppercase tracking-wider text-muted">Спеціалізовані платформи</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- ADL НУОУ -->
+            <div class="glass-card military p-6 flex flex-col h-full">
+                <div class="flex-grow flex flex-col items-center text-center">
+                    <div class="logo-tile tile-lg"><img src="https://www.google.com/s2/favicons?sz=128&domain=adl.nuou.org.ua" alt="ADL НУОУ Logo"></div>
+                    <h3 class="text-2xl font-bold mb-2 gradient-text-mil mt-2">ADL НУОУ</h3>
+                    <p class="text-muted text-sm mb-4 max-w-md mx-auto">Система дистанційного навчання Національного університету оборони України. Внутрішній портал для військовослужбовців.</p>
+                </div>
+                <a href="https://adl.nuou.org.ua/" target="_blank" class="btn-link mt-auto">Перейти на портал</a>
+            </div>
+
+            <!-- NATO ADL -->
+            <div class="glass-card military p-6 flex flex-col h-full">
+                <div class="flex-grow flex flex-col items-center text-center">
+                    <div class="logo-tile tile-lg"><img src="https://www.google.com/s2/favicons?sz=128&domain=jadl.act.nato.int" alt="NATO Logo"></div>
+                    <h3 class="text-2xl font-bold mb-2 gradient-text-mil mt-2">NATO ADL / JADL</h3>
+                    <p class="text-muted text-sm mb-4 max-w-md mx-auto">Платформа дистанційного навчання НАТО (Advanced Distributed Learning). Доступ до міжнародних стандартів, курсів та процедур Альянсу.</p>
+                </div>
+                <a href="https://jadl.act.nato.int/" target="_blank" class="btn-link mt-auto">Перейти на портал</a>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-footer pt-8 text-center text-footer text-sm">
+        <p>&copy; 2026. Розроблено для слухачів курсу ПВО.</p>
+        <p class="mt-1">Руслан Поночовний | Інститут професійної військової освіти "Вишкіл Лідерів"</p>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            var root = document.documentElement;
+            var isLight = root.getAttribute('data-theme') === 'light';
+            if (isLight) {
+                root.removeAttribute('data-theme');
+                localStorage.setItem('vishkil-theme', 'dark');
+            } else {
+                root.setAttribute('data-theme', 'light');
+                localStorage.setItem('vishkil-theme', 'light');
+            }
+        }
+    </script>
+
+</body>
+</html>
